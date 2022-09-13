@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woniu.dao.UserDao">
+    <resultMap id="myResultMap" type="user">
+        <id column="id" property="id"></id>
+        <result column="user_account" property="account"/>
+        <result column="user_name" property="username"/>
+        <result column="user_password" property="password"/>
+    </resultMap>
+    <select id="selectAllUser" resultMap="myResultMap">
+        select * from user
+    </select>
+    <insert id="insertUser">
+        insert into user values (default,#{account},#{username},#{password})
+    </insert>
+    <update id="updateUser">
+        update user set user_account = #{account},user_name = #{username},user_password = #{password} where id = #{id}
+    </update>
+    <delete id="deleteUser">
+        delete from user where id = #{id}
+    </delete>
+
+    <select id="selectUserBy" resultMap="myResultMap">
+        select * from user where 1=1
+        <if test="account!=null and account!=''">
+            and user_account like concat ('%',#{account},'%')
+        </if>
+        <if test="username!=null and username!=''">
+            and user_name like concat ('%',#{username},'%')
+        </if>
+    </select>
+
+    <select id="sortAllUser" resultMap="myResultMap">
+        select * from user order by ${columnName} asc
+    </select>
+    
+    <delete id="deleteById">
+        delete from user 
+    <where>
+        <foreach collection="array" open="id in (" item="i" close=")" separator=",">
+            #{i}
+        </foreach>
+    </where>
+    </delete>
+</mapper>
